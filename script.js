@@ -38,15 +38,15 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
  * 3秒後に焼き芋完成する
  * キャンセル関数を返す
  */
-function startCancelableTimer() {
-  const id = setTimeout(() => {
-    alert("焼き芋完成✨️");
-  }, 3000);
-  console.log(id);
-  return function () {
-    clearTimeout(id);
-  };
-}
+// function startCancelableTimer() {
+//   const id = setTimeout(() => {
+//     alert("焼き芋完成✨️");
+//   }, 3000);
+//   console.log(id);
+//   return function () {
+//     clearTimeout(id);
+//   };
+// }
 
 /**
  * 2秒後にキャンセルする処理（即時実行関数バージョン）
@@ -63,12 +63,49 @@ function startCancelableTimer() {
 // ---------関数定義バージョン---------
 // 関数定義より，変数に代入はけっこう見やすいのかもしれない？
 
-const cancelFlow = () => {
-  const cancel = startCancelableTimer();
-  setTimeout(() => {
-    cancel();
-    console.log("キャンセルされましたわよ～！！");
-  }, 1000);
-};
+// const cancelFlow = () => {
+//   const cancel = startCancelableTimer();
+//   setTimeout(() => {
+//     cancel();
+//     console.log("キャンセルされましたわよ～！！");
+//   }, 1000);
+// };
 
-cancelFlow();
+// cancelFlow();
+
+// ーーーーーイベントループでログがどの順に出るかを確認するコードーーーーーー
+// 実行順番は「同期ログ → マイクロタスク(Promise.then) → タスク(setTimeout)」
+console.log("1番目は自己紹介。いちかどんは焼き芋が好き🍠");
+
+// setTimeoutはタスクキューに追加されるから後回し。
+setTimeout(() => {
+  console.log("5つ目の処理");
+}, 0);
+
+// Promiseチケットの発行
+const ichikaTicket = Promise.resolve("3つ目に実行される。");
+console.log("ichikaTicket:", ichikaTicket);
+
+// Promiseチケットの発行
+const pochiFriendsTicket = Promise.resolve("4つ目に実行される。");
+console.log("pochiFriendsTicket:", pochiFriendsTicket);
+
+setTimeout(() => {
+  console.log("6つ目の処理");
+}, 0);
+
+// Promiseチケットはファストパスなので，setTimeoutより前に実行される
+ichikaTicket.then((message) => {
+  console.log(message);
+});
+
+pochiFriendsTicket.then((message) => {
+  console.log(message);
+});
+
+setTimeout(() => {
+  console.log("7つ目の処理");
+}, 0);
+
+// 後回しの処理の前に実行される。
+console.log("2つ目に実行される");
