@@ -32,8 +32,12 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 // }
 // startCancelableTimer();
 
-//  キャンセル関数を返すstartCancelableTimer バージョン
-
+/**
+ * キャンセル関数を返すバージョンのstartCancelableTimer
+ * @returns {() => void} タイマーをキャンセルする関数
+ * 3秒後に焼き芋完成する
+ * キャンセル関数を返す
+ */
 function startCancelableTimer() {
   const id = setTimeout(() => {
     alert("焼き芋完成✨️");
@@ -45,10 +49,26 @@ function startCancelableTimer() {
 }
 
 /**
- * 2秒後にキャンセルする処理
+ * 2秒後にキャンセルする処理（即時実行関数バージョン）
+ * グローバルスコープより，関数や即時実行関数（IIFE）で包んでローカルスコープに閉じるのが良き
  */
-const cancel = startCancelableTimer();
-setTimeout(() => {
-  cancel();
-  console.log("キャンセルされましたわよ～！！");
-}, 2000);
+// (() => {
+//   const cancel = startCancelableTimer();
+//   setTimeout(() => {
+//     cancel();
+//     console.log("キャンセルされましたわよ～！！");
+//   }, 1000);
+// })();
+
+// ---------関数定義バージョン---------
+// 関数定義より，変数に代入はけっこう見やすいのかもしれない？
+
+const cancelFlow = () => {
+  const cancel = startCancelableTimer();
+  setTimeout(() => {
+    cancel();
+    console.log("キャンセルされましたわよ～！！");
+  }, 1000);
+};
+
+cancelFlow();
