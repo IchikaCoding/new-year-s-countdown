@@ -61,3 +61,29 @@
   - 前に学んだコードを軽く見返して、最低限のヒントだけ拾う
   - コピペはしない
 - まだよくわからなかったら MDN をチェック
+
+## 悩み
+
+- キャンセルしたのに焼き芋が完成しちゃう
+
+```js
+function startCancelableTimer() {
+  const id = setTimeout(() => {
+    alert("焼き芋完成✨️");
+  }, 3000);
+  console.log(id);
+  return function () {
+    clearTimeout(id);
+  };
+}
+function cancelTimer() {
+  setTimeout(() => {
+    const cancel = startCancelableTimer();
+    cancel();
+    console.log("キャンセルされましたわよ～！！");
+  }, 2000);
+}
+
+cancelTimer();
+// cancel();
+```

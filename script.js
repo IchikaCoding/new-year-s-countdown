@@ -20,17 +20,17 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 
 //  setTimeout タイマー: 5 秒後にメッセージを表示し、途中でキャンセルできる関数 startCancelableTimer を作る。
 
-function startCancelableTimer() {
-  const id = setTimeout(() => {
-    alert("やっほー！こんちか♪");
-  }, 5000);
-  console.log(id);
-  setTimeout(() => {
-    clearTimeout(id);
-    console.log("キャンセルしました");
-  }, 2000);
-}
-startCancelableTimer();
+// function startCancelableTimer() {
+//   const id = setTimeout(() => {
+//     alert("やっほー！こんちか♪");
+//   }, 5000);
+//   console.log(id);
+//   setTimeout(() => {
+//     clearTimeout(id);
+//     console.log("キャンセルしました");
+//   }, 2000);
+// }
+// startCancelableTimer();
 
 //  キャンセル関数を返すstartCancelableTimer バージョン
 
@@ -39,14 +39,16 @@ function startCancelableTimer() {
     alert("焼き芋完成✨️");
   }, 3000);
   console.log(id);
-  return clearTimeout(id);
+  return function () {
+    clearTimeout(id);
+  };
 }
-function cancelTimer() {
-  setTimeout(() => {
-    const cancel = startCancelableTimer();
-    console.log("キャンセルされましたわよ～！！");
-  }, 2000);
-}
-startCancelableTimer();
 
-// cancel();
+/**
+ * 2秒後にキャンセルする処理
+ */
+const cancel = startCancelableTimer();
+setTimeout(() => {
+  cancel();
+  console.log("キャンセルされましたわよ～！！");
+}, 2000);
