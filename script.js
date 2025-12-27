@@ -31,3 +31,22 @@ function startCancelableTimer() {
   }, 2000);
 }
 startCancelableTimer();
+
+//  キャンセル関数を返すstartCancelableTimer バージョン
+
+function startCancelableTimer() {
+  const id = setTimeout(() => {
+    alert("焼き芋完成✨️");
+  }, 3000);
+  console.log(id);
+  return clearTimeout(id);
+}
+function cancelTimer() {
+  setTimeout(() => {
+    const cancel = startCancelableTimer();
+    console.log("キャンセルされましたわよ～！！");
+  }, 2000);
+}
+startCancelableTimer();
+
+// cancel();
