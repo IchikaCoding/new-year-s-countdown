@@ -17,3 +17,17 @@ const remainingDays = Math.floor(
 console.log(remainingDays);
 
 countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
+
+//  setTimeout タイマー: 5 秒後にメッセージを表示し、途中でキャンセルできる関数 startCancelableTimer を作る。
+
+function startCancelableTimer() {
+  const id = setTimeout(() => {
+    alert("やっほー！こんちか♪");
+  }, 5000);
+  console.log(id);
+  setTimeout(() => {
+    clearTimeout(id);
+    console.log("キャンセルしました");
+  }, 2000);
+}
+startCancelableTimer();
