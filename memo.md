@@ -87,3 +87,70 @@ function cancelTimer() {
 cancelTimer();
 // cancel();
 ```
+
+- 成功: 1（最小の正整数）
+- 成功: 42（一般的な正整数）
+- 失敗: 0（0 は無効扱い）
+- 失敗: -5（負数は無効扱い）
+
+# 2025-12-28
+
+- Promise は reject か resolve を呼ぶ必要がある！
+- 以下のコードでは，成功したら Promise オブジェクトが一番最初に返ってくる。だけど，エラーだったら，一番最後に返ってくる。これはどうして？
+  - 成功している時は，await して，ブラウザさんに setTimeout とか時間を数えてもらっている
+  - だから，その間は JS さんは暇人 → 待っている間に Promise オブジェクトを返す
+  - エラーのときは，JS さんがエラーをキャッチしている → 忙しい
+  - JS の仕事終わった最後に Promise オブジェクトが返って来る
+
+```js
+// 関数の定義一覧
+function fetchUser(id) {
+  return new Promise((resolve, reject) => {
+    if (id > 0) {
+      setTimeout(() => {
+        resolve({ id: id, name: `User ${id}` });
+      }, 3000);
+    } else {
+      reject("Invalid user id");
+    }
+  });
+}
+
+function changeId(id) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const changedNum = id * 10;
+      resolve(changedNum);
+    }, 2000);
+  });
+}
+```
+
+```js
+// ------async / await 版のコード-------
+
+async function main(id) {
+  try {
+    console.log("ーーー実行中ですーーー");
+    console.time("計測");
+    const user = await fetchUser(id);
+    console.log("user", user);
+    const processedId = await changeId(user.id);
+    console.log("processedId", processedId);
+    console.timeEnd("計測");
+  } catch (error) {
+    console.error(error);
+    console.log("エラーです！！");
+  } finally {
+    console.log("---おつちか✨️----");
+  }
+}
+```
+
+## throw と try-catch の練習
+
+- 関数じゃないと return はできない
+  - 即時実行関数か，関数で包む ♪
+- 「代替値を返す」と言われたら，
+  - 数値なら →0 とか NaN とかを返す
+  - 文字列なら → 空文字とかを返す
