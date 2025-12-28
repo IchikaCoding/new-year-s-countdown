@@ -18,6 +18,7 @@ console.log(remainingDays);
 
 countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 
+// 2025-12-28
 //  setTimeout タイマー: 5 秒後にメッセージを表示し、途中でキャンセルできる関数 startCancelableTimer を作る。
 
 // function startCancelableTimer() {
