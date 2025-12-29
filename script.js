@@ -227,10 +227,54 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 
 // https://jsonplaceholder.typicode.com/todos/1　のリンクを取得
 // やりたいこと：URLからタイトル取得→表示する
-async function displayTitle() {
-  // responseでJSON文字列をゲット
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-  const objDate = await response.json();
-  console.log(objDate);
-  console.log(objDate.title);
+// async function displayTitle() {
+//   // responseでJSON文字列をゲット
+//   const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+//   const objDate = await response.json();
+//   console.log(objDate);
+//   console.log(objDate.title);
+// }
+
+// ーーーーエラーが生じたらメッセージが表示できるーーーー
+
+// async function getTitle(url) {
+//   try {
+//     // HTTPレスポンスのステータスが200番代以外だったら例外処理？
+//     const response = await fetch(url);
+//     if (!response.ok) {
+//       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+//     }
+//     console.log("response", response);
+//     const objDate = await response.json();
+//     console.log({ objDate });
+//     console.log("title:", objDate.title);
+//   } catch (error) {
+//     if (error instanceof TypeError) {
+//       console.error("ネットワーク系のエラー：", error);
+//     } else {
+//       console.error("HTTP/アプリ層の失敗:", error);
+//     }
+//   }
+// }
+
+// ーーーーーーーーーーーーーー練習ーーーーーーーーーーーーーー
+
+// https://jsonplaceholder.typicode.com/todos/1が正解のURL
+// https://ichikaexamplr.com/　これが失敗のURL
+
+async function getTitle(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    const objectData = await response.json();
+    console.log("titleはこちら:", objectData.title);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      console.error("URLミスっています！！");
+    } else {
+      console.error("なにかが違う！！！");
+    }
+  }
 }
