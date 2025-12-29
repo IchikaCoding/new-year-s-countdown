@@ -135,26 +135,26 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 //   console.log(`${value}♪`);
 // });
 
-function fetchUser(id) {
-  return new Promise((resolve, reject) => {
-    if (id > 0) {
-      setTimeout(() => {
-        resolve({ id: id, name: `User ${id}` });
-      }, 3000);
-    } else {
-      reject("Invalid user id");
-    }
-  });
-}
+// function fetchUser(id) {
+//   return new Promise((resolve, reject) => {
+//     if (id > 0) {
+//       setTimeout(() => {
+//         resolve({ id: id, name: `User ${id}` });
+//       }, 3000);
+//     } else {
+//       reject("Invalid user id");
+//     }
+//   });
+// }
 
-function changeId(id) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const changedNum = id * 10;
-      resolve(changedNum);
-    }, 2000);
-  });
-}
+// function changeId(id) {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       const changedNum = id * 10;
+//       resolve(changedNum);
+//     }, 2000);
+//   });
+// }
 
 // changeId(15).then((value) => {
 //   console.log(value);
