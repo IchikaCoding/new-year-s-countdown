@@ -264,6 +264,7 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 
 async function getTitle(url) {
   try {
+    // fetchはエラーを投げる。URLミスったらこのエラーがキャッチされる
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
