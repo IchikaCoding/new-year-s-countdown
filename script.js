@@ -176,43 +176,43 @@ countdownDaysElement.textContent = `残りの日数は ${remainingDays} 日`;
 
 // ------async / await 版のコード-------
 
-async function main(id) {
-  try {
-    console.log("ーーー実行中ですーーー");
-    console.time("計測");
-    const user = await fetchUser(id);
-    console.log("user", user);
-    const processedId = await changeId(user.id);
-    console.log("processedId", processedId);
-  } catch (error) {
-    console.error(error);
-    console.log("エラーです！！");
-  } finally {
-    console.timeEnd("計測");
-    console.log("---おつちか✨️----");
-  }
-}
+// async function main(id) {
+//   try {
+//     console.log("ーーー実行中ですーーー");
+//     console.time("計測");
+//     const user = await fetchUser(id);
+//     console.log("user", user);
+//     const processedId = await changeId(user.id);
+//     console.log("processedId", processedId);
+//   } catch (error) {
+//     console.error(error);
+//     console.log("エラーです！！");
+//   } finally {
+//     console.timeEnd("計測");
+//     console.log("---おつちか✨️----");
+//   }
+// }
 
 // a→10，ｂ→2。ｂが0のとき，エラーにする
 
-function divide(a, b) {
-  if (b === 0) {
-    throw new Error("Cannot divide by zero");
-  } else {
-    const result = a / b;
-    return result;
-  }
-}
+// function divide(a, b) {
+//   if (b === 0) {
+//     throw new Error("Cannot divide by zero");
+//   } else {
+//     const result = a / b;
+//     return result;
+//   }
+// }
 
-function safeDivide(a, b) {
-  try {
-    const dividedValue = divide(a, b);
-    return dividedValue;
-  } catch (error) {
-    console.error(error);
-    return 0;
-  }
-}
+// function safeDivide(a, b) {
+//   try {
+//     const dividedValue = divide(a, b);
+//     return dividedValue;
+//   } catch (error) {
+//     console.error(error);
+//     return 0;
+//   }
+// }
 
 // (() => {
 //   try {
@@ -224,3 +224,13 @@ function safeDivide(a, b) {
 //     return 0;
 //   }
 // })();
+
+// https://jsonplaceholder.typicode.com/todos/1　のリンクを取得
+// やりたいこと：URLからタイトル取得→表示する
+async function displayTitle() {
+  // responseでJSON文字列をゲット
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+  const objDate = await response.json();
+  console.log(objDate);
+  console.log(objDate.title);
+}
