@@ -19,18 +19,18 @@ console.log("Hello World");
 /** 工程で分離させて3行メモ（最小でOK）
  * 1) タイマー開始: setTimeout を呼び、timeoutId を取得する
  * 2) IDの保持: timeoutId を変数に保存しておく（あとでキャンセルするため）
- * 3) ログ出力: 発火したらtextで受け取った引数をdisplayLog() でログに出す。キャンセルしたらキャンセルログを出す
+ * 3) ログ出力: setTimeout が発火したらtextで受け取った引数をdisplayLog() でログに出す。setTimeout がキャンセルされたらキャンセルログを出す
  */
 
 /**
  * タイマー開始: setTimeout を呼び、timeoutId を取得する
- * @param {string} displayText
  * @param {number} ms
+ * @param {string} label
  * @returns {number} timeoutId
  */
-function startTimers(displayText, ms) {
+function startCancelableTimer(ms, label) {
   const timeoutId = setTimeout(() => {
-    displayLog(displayText);
+    displayLog(label);
   }, ms);
   return timeoutId;
 }
@@ -50,4 +50,10 @@ function displayLog(text) {
 function clearTimer(id) {
   clearTimeout(id);
   displayLog("setTimeoutはキャンセルされました");
+}
+
+function RunDemo() {
+  const id3 = startCancelableTimer(3000, "3秒のタイマー実行");
+  const id0 = startCancelableTimer(0, "0秒のタイマー実行");
+  clearTimer(id3);
 }
