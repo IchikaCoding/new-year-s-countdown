@@ -52,6 +52,11 @@ function clearTimer(id) {
   displayLog("setTimeoutはキャンセルされました");
 }
 
+// TODO 途中！問題の回答になっていない可能性あり
+
+/**
+ * タイマーのデモ処理
+ */
 function RunDemo() {
   const id3 = startCancelableTimer(3000, "3秒のタイマー実行");
   const id0 = startCancelableTimer(0, "0秒のタイマー実行");
