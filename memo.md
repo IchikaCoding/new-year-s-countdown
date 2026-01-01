@@ -167,3 +167,21 @@ async function main(id) {
 - 複数の変数を return したいときどうしたらいい？
   - 複数返したいなら配列やオブジェクトでまとめる必要あり
   -
+
+# 2026-01-01
+
+## わからないところ
+
+- TODO ボタンを押しても Promise が返ってこない
+  - ブラウザがイベントハンドラを登録して，その返り値は捨てるから返ってこない。
+- `omikujiFunc()`を実行した時に，Promise が Pending になっている。
+
+  - 3 秒後に resolve するから，その間は Pending になるだけ
+
+- HTMLElement のサブクラスに color がある
+  - `style.color = "#d93d3d";`のように指定するとインラインの color を設定できる
+- HTMLElement のサブクラスってなに？？
+
+- Codex からの回答を読む
+
+- math.randam って 1 を返さないの？
