@@ -36,8 +36,7 @@ async function omikujiFunc() {
   console.log(result);
   if (result === "いちかどん吉") {
     resultElement.style.color = "#ff0000";
-  }
-  {
+  } else {
     resultElement.style.color = "#d4af37";
   }
   omikujiBtnElement.disabled = false;

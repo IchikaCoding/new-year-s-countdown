@@ -182,6 +182,21 @@ async function main(id) {
   - `style.color = "#d93d3d";`のように指定するとインラインの color を設定できる
 - HTMLElement のサブクラスってなに？？
 
-- Codex からの回答を読む
-
 - math.randam って 1 を返さないの？
+
+- setTimeout()の第一引数は，無名関数で包めば、resolve の前後に他の処理を挟みたいときにも書きやすい。
+  - `setTimeout(functionRef, delay, param1, param2)`
+
+```js
+// setTimeout が3秒後に resolve("3秒の待ち時間終了") を呼んでくれる形です。
+new Promise((resolve) => setTimeout(resolve, 3000, "3秒の待ち時間終了"));
+```
+
+```js
+// 無名関数で包んだバージョン
+new Promise((resolve) =>
+  setTimeout(() => {
+    resolve("3秒の待ち時間終了");
+  }, 3000)
+);
+```
