@@ -92,45 +92,45 @@ function RunDemo() {
 
 // idが0以下なら無効なIDですと表示
 
-/** バリデーションの関数
-IDを受け取って，IDが0より大きいなら{ id, ok: true }を返す。
-idが0以下なら「無効なIDです」という文字列を返す。
-引数がid。
-*/
-function validateFunc(id) {
-  if (id <= 0) {
-    throw new Error("invalid id");
-  } else {
-    const myReplay = { id, ok: true };
-    console.log("myReplay", myReplay);
-    return myReplay;
-  }
-}
+// /** バリデーションの関数
+// IDを受け取って，IDが0より大きいなら{ id, ok: true }を返す。
+// idが0以下なら「無効なIDです」という文字列を返す。
+// 引数がid。
+// */
+// function validateFunc(id) {
+//   if (id <= 0) {
+//     throw new Error("invalid id");
+//   } else {
+//     const myReplay = { id, ok: true };
+//     console.log("myReplay", myReplay);
+//     return myReplay;
+//   }
+// }
 
-/** 
-- fetchDataは，IDを受け取って，IDが0より大きいなら{ id, ok: true }を返す。idが0以下なら「無効なIDです」というエラーを投げる。
-‐ https://jsonplaceholder.typicode.com/posts%60にPOSTする
-*/
-async function fetchData(id) {
-  try {
-    const validateResult = validateFunc(id);
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(validateResult),
-    });
-    // responseのステータスが404だったらエラーを表示する
-    // if (response.status === 404) {
-    //   throw new Error("404エラー！");
-    // }
-    console.log(response);
-    const resultObj = await response.json();
-    console.log("送信されました：", resultObj);
-    return validateResult;
-  } catch (error) {
-    console.error(`失敗しました：${error}`);
-  }
-}
+// /**
+// - fetchDataは，IDを受け取って，IDが0より大きいなら{ id, ok: true }を返す。idが0以下なら「無効なIDです」というエラーを投げる。
+// ‐ https://jsonplaceholder.typicode.com/posts%60にPOSTする
+// */
+// async function fetchData(id) {
+//   try {
+//     const validateResult = validateFunc(id);
+//     const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(validateResult),
+//     });
+//     // responseのステータスが404だったらエラーを表示する
+//     // if (response.status === 404) {
+//     //   throw new Error("404エラー！");
+//     // }
+//     console.log(response);
+//     const resultObj = await response.json();
+//     console.log("送信されました：", resultObj);
+//     return validateResult;
+//   } catch (error) {
+//     console.error(`失敗しました：${error}`);
+//   }
+// }
 
 // /**
 // - fetchDataは，IDを受け取って，IDが0より大きいなら{ id, ok: true }を返す。idが0以下なら「無効なIDです」という文字列を返す。
@@ -159,3 +159,17 @@ async function fetchData(id) {
 //     console.error(`失敗しました：${error}`);
 //   }
 // }
+
+// Promiseバージョン
+// Promiseのチケット発行：
+// 成功したとき(.then)： { id, ok: true }を返す
+// 失敗したい時(.catch)： "invalid id"のエラーを投げる
+
+function fetchData(id) {
+  const promiseTicket = new Promise((resolve, reject) => {
+    if (id <= 0) {
+      reject("invalid id");
+    } else resolve({ id, ok: true });
+  });
+  console.log(promiseTicket);
+}
