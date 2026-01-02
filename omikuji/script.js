@@ -40,19 +40,12 @@ async function omikujiFunc() {
 
   // もし結果が大吉なら，HTMLElement のサブクラスにある color に#d93d3dの色を代入する
   // 大吉以外だったら，HTMLElement のサブクラスにある color に#d4af37の色を代入する
-  // TODO resultArea.style.colorの出処がわからない！
   if (result === "大吉") {
     resultArea.style.color = "#d93d3d";
-    // ★追加：背景を「おめでたい金色（薄め）」にする
-    document.body.style.backgroundColor = "#fff8dc";
   } else if (result === "凶") {
     resultArea.style.color = "#333";
-    // ★追加：背景を「どんよりグレー」にする
-    document.body.style.backgroundColor = "#d3d3d3";
   } else {
     resultArea.style.color = "#d4af37";
-    // ★追加：背景を「元の色」に戻す
-    document.body.style.backgroundColor = "#fcefe9";
   }
   // omikujiBtnの無効をfalseにする
   omikujiBtn.disabled = false;

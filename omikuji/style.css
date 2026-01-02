@@ -8,6 +8,11 @@ body {
   height: 100vh;
   margin: 0;
   text-align: center;
+  /* ★追加：背景に画像を追加＆表示を調整 */
+  background-image: url("/omikuji/omikuji-bg.png"); /* 今のパスに合わせて */
+  background-size: cover; /* 画面いっぱいに敷き詰める */
+  background-repeat: no-repeat; /* タイル状に繰り返さない */
+  background-position: center; /* 中央に寄せる */
 }
 .container {
   background: white;
@@ -57,7 +62,7 @@ button:disabled {
 ------------------------------------------- */
 
 /* 1. ガサガサ震えるアニメーションの定義 */
-@keyframes shake {
+/* @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);
   }
@@ -82,15 +87,16 @@ button:disabled {
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
   }
-}
+} */
 
 /* JSがこのクラスをつけると、震えだす！ */
-.shake-animation {
-  animation: shake 0.5s; /* 0.5秒かけて震える */
-  animation-iteration-count: infinite; /* ずっと繰り返す */
-}
+/* 0.5秒かけて震える */
+/* ずっと繰り返す */
+/* .shake-animation {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+} */
 
 /* 2. 背景色を「ふわっと」変えるための設定 */
-body {
-  transition: background-color 2s ease; /* 色が変わる時、2秒かけてゆっくり変わる */
-}
+/* body {
+  transition: background-color 2s ease;} /* 色が変わる時、2秒かけてゆっくり変わる */
