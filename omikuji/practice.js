@@ -17,6 +17,7 @@ omikujiBtnElement.addEventListener("click", omikujiFunc);
 // その選ばれた配列のなかの文字列がresultElementに表示される
 
 async function omikujiFunc() {
+  resultElement.style.color = "#d4af37";
   const waitString = "占い中・・・";
   omikujiBtnElement.disabled = true;
   resultElement.textContent = waitString;
