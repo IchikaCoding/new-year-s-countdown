@@ -4,7 +4,7 @@ const resultArea = document.getElementById("result");
 // IDがomikuji-btnのHTML要素を取得
 const omikujiBtn = document.getElementById("omikuji-btn");
 // ★追加：震わせたい箱（コンテナ）も取得しておく
-const container = document.querySelector(".container");
+// const container = document.querySelector(".container");
 
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
@@ -27,7 +27,7 @@ async function omikujiFunc() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.timeEnd("時間測定");
   // ★追加：待った終わったので、震えるクラスを外す（スイッチOFF！）
-  container.classList.remove("shake-animation");
+  // container.classList.remove("shake-animation");
   // 結果として表示する文字列を配列でfortunesに代入する
   const fortunes = ["大吉", "吉", "中吉", "小吉", "末吉", "凶"];
   // fortunesの配列の長さに合わせてランダムな数字が生成
