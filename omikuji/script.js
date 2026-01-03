@@ -15,6 +15,7 @@ omikujiBtn.addEventListener("click", omikujiFunc);
  */
 async function omikujiFunc() {
   // ★追加：カラーのリセット
+  // シンプルだから関数切り出ししないでいく
   resultArea.style.color = "#d4af37";
   // 今は???の結果表示部分に"神様と通信中..."という文字列を代入
   resultArea.textContent = "神様と通信中...";
