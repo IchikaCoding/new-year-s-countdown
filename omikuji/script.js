@@ -18,9 +18,13 @@ async function omikujiFunc() {
   // シンプルだから関数切り出ししないでいく
   resultArea.style.color = "#d4af37";
   // 今は???の結果表示部分に"神様と通信中..."という文字列を代入
-  resultArea.textContent = "神様と通信中...";
+  resultArea.textContent = "占い中...";
   // omikujiBtnが通信中はdisabled（無効）をtrueにしておく。
   omikujiBtn.disabled = true;
+
+  // ★追加：コメントを外す＆クラスを追加（震えスタート！）
+  const container = document.querySelector(".container");
+  container.classList.add("shake-animation"); // ← これを追加！
 
   // 3秒後にresolveする
   // この処理は3秒待たせるだけの処理。後続の処理を3秒間停止させておく。
@@ -28,7 +32,7 @@ async function omikujiFunc() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.timeEnd("時間測定");
   // ★追加：待った終わったので、震えるクラスを外す（スイッチOFF！）
-  // container.classList.remove("shake-animation");
+  container.classList.remove("shake-animation");
   // 結果として表示する文字列を配列でfortunesに代入する
   const fortunes = ["大吉", "吉", "中吉", "小吉", "末吉", "凶"];
   // fortunesの配列の長さに合わせてランダムな数字が生成

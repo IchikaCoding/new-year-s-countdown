@@ -61,8 +61,8 @@ button:disabled {
    ★追加：アニメーションの準備
 ------------------------------------------- */
 
-/* 1. ガサガサ震えるアニメーションの定義 */
-/* @keyframes shake {
+/* 例：ガタガタ震えるアニメーション */
+@keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);
   }
@@ -84,18 +84,25 @@ button:disabled {
   60% {
     transform: translate(-3px, 1px) rotate(0deg);
   }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
   }
-} */
+}
 
-/* JSがこのクラスをつけると、震えだす！ */
-/* 0.5秒かけて震える */
-/* ずっと繰り返す */
-/* .shake-animation {
+.shake-animation {
+  /* 上で作ったshakeという動きを0.5秒で実行し続ける */
   animation: shake 0.5s;
-  animation-iteration-count: infinite;
-} */
+  animation-iteration-count: infinite; /* 無限に繰り返す */
+}
 
 /* 2. 背景色を「ふわっと」変えるための設定 */
 /* body {
