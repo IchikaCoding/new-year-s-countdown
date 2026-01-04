@@ -58,50 +58,32 @@ button:disabled {
 }
 
 /* -------------------------------------------
-   ★追加：アニメーションの準備
+   ★修正：お正月らしい、ゆったりした揺れ
 ------------------------------------------- */
 
-/* 例：ガタガタ震えるアニメーション */
-@keyframes shake {
+/* ゆらゆらと優しく揺れる */
+@keyframes soft-sway {
   0% {
-    transform: translate(1px, 1px) rotate(0deg);
+    transform: rotate(0deg);
   }
-  10% {
-    transform: translate(-1px, -2px) rotate(-1deg);
-  }
-  20% {
-    transform: translate(-3px, 0px) rotate(1deg);
-  }
-  30% {
-    transform: translate(3px, 2px) rotate(0deg);
-  }
-  40% {
-    transform: translate(1px, -1px) rotate(1deg);
-  }
+  25% {
+    transform: rotate(5deg);
+  } /* 右に少し傾く */
   50% {
-    transform: translate(-1px, 2px) rotate(-1deg);
-  }
-  60% {
-    transform: translate(-3px, 1px) rotate(0deg);
-  }
-  70% {
-    transform: translate(3px, 1px) rotate(-1deg);
-  }
-  80% {
-    transform: translate(-1px, -1px) rotate(1deg);
-  }
-  90% {
-    transform: translate(1px, 2px) rotate(0deg);
-  }
+    transform: rotate(0deg);
+  } /* 真ん中に戻る */
+  75% {
+    transform: rotate(-5deg);
+  } /* 左に少し傾く */
   100% {
-    transform: translate(1px, -2px) rotate(-1deg);
+    transform: rotate(0deg);
   }
 }
 
 .shake-animation {
-  /* 上で作ったshakeという動きを0.5秒で実行し続ける */
-  animation: shake 0.5s;
-  animation-iteration-count: infinite; /* 無限に繰り返す */
+  /* 名前を soft-sway に変更 */
+  /* 時間を 0.5s から 2.5s に変更して、ゆっくりにする */
+  animation: soft-sway 2.5s ease-in-out infinite;
 }
 
 /* 2. 背景色を「ふわっと」変えるための設定 */
