@@ -3,8 +3,10 @@
 const resultArea = document.getElementById("result");
 // IDがomikuji-btnのHTML要素を取得
 const omikujiBtn = document.getElementById("omikuji-btn");
-// ★追加：震わせたい箱（コンテナ）も取得しておく
-// const container = document.querySelector(".container");
+
+// ★ここからPokeAPI追加
+const pokemonInfo = document.getElementById("pokemon-info");
+// ★ここまでPokeAPI追加
 
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
@@ -52,6 +54,27 @@ async function omikujiFunc() {
   } else {
     resultArea.style.color = "#d4af37";
   }
+
+  // ★ここからPokeAPI追加：Dittoのデータ取得
+  pokemonInfo.textContent = "ポケモンデータ取得中...";
+  try {
+    const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+    if (!res.ok) {
+      throw new Error("APIエラー");
+    }
+    const data = await res.json();
+    // 使いたい項目だけピックアップ
+    const name = data.name;
+    const height = data.height;
+    const weight = data.weight;
+    const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
+    pokemonInfo.textContent = `名前: ${name} / 高さ: ${height} / 重さ: ${weight} / 特性: ${firstAbility}`;
+  } catch (error) {
+    console.error(error);
+    pokemonInfo.textContent = "ポケモンデータを取れませんでした。";
+  }
+  // ★ここまでPokeAPI追加
+
   // omikujiBtnの無効をfalseにする
   omikujiBtn.disabled = false;
 }
