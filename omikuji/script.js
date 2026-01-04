@@ -3,10 +3,8 @@
 const resultArea = document.getElementById("result");
 // IDがomikuji-btnのHTML要素を取得
 const omikujiBtn = document.getElementById("omikuji-btn");
-
-// ★ここからPokeAPI追加
+// ID属性がpokemon-infoのHTML要素を取得してpokemonInfoに代入。
 const pokemonInfo = document.getElementById("pokemon-info");
-// ★ここまでPokeAPI追加
 
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
@@ -16,8 +14,8 @@ omikujiBtn.addEventListener("click", omikujiFunc);
  * omikujiBtnのイベントハンドラomikujiFunc
  */
 async function omikujiFunc() {
-  // ★追加：カラーのリセット
-  // シンプルだから関数切り出ししないでいく
+  // 色の初期値をセット
+  // #d4af37というカラーをresultAreaというHTML要素のスタイルプロパティのcolorに代入。
   resultArea.style.color = "#d4af37";
   // 今は???の結果表示部分に"神様と通信中..."という文字列を代入
   resultArea.textContent = "占い中...";
@@ -25,8 +23,11 @@ async function omikujiFunc() {
   omikujiBtn.disabled = true;
 
   // ★追加：コメントを外す＆クラスを追加（震えスタート！）
+  // コンテナクラスのHTML要素を取得。containerに代入。
   const container = document.querySelector(".container");
-  container.classList.add("shake-animation"); // ← これを追加！
+  // ★追加：CSSのアニメーションを適応させるために，クラス属性に追加する。
+  // containerのクラス属性の中に，shake-animationというクラスを追加。
+  container.classList.add("shake-animation");
 
   // 3秒後にresolveする
   // この処理は3秒待たせるだけの処理。後続の処理を3秒間停止させておく。
@@ -34,6 +35,7 @@ async function omikujiFunc() {
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.timeEnd("時間測定");
   // ★追加：待った終わったので、震えるクラスを外す（スイッチOFF！）
+  // containerのクラス属性からshake-animationを削除。containerの揺れを止める。
   container.classList.remove("shake-animation");
   // 結果として表示する文字列を配列でfortunesに代入する
   const fortunes = ["大吉", "吉", "中吉", "小吉", "末吉", "凶"];
@@ -56,21 +58,31 @@ async function omikujiFunc() {
   }
 
   // ★ここからPokeAPI追加：Dittoのデータ取得
+  // pokemonInfoのHTML要素のtextContentに"ポケモンデータ取得中..."を代入。
   pokemonInfo.textContent = "ポケモンデータ取得中...";
+  // ここからの処理はエラーが発生したら即座にcatchでキャッチされる
   try {
+    // https://pokeapi.co/api/v2/pokemon/ditto のリンクからデータを非同期的に取得し，その結果をresに代入。
     const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+    // もしリンクの通信がOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
     if (!res.ok) {
       throw new Error("APIエラー");
     }
+    // 取得したJSON文字列の結果をjson()を利用してJSのオブジェクトに変更。dataという変数に代入。
     const data = await res.json();
-    // 使いたい項目だけピックアップ
+    // 変数dataから，そのプロパティを指定して各変数に代入
     const name = data.name;
     const height = data.height;
     const weight = data.weight;
+    // これは何だ？？？
     const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
+    // さきほど宣言した変数を使用して，それぞれの内容に日本語を追加したものをpokemonInfoというHTML要素のtextContentに代入。
     pokemonInfo.textContent = `名前: ${name} / 高さ: ${height} / 重さ: ${weight} / 特性: ${firstAbility}`;
   } catch (error) {
+    // tryでエラーが起きたらすべてここに入る
+    // エラーをコンソールにコンソールのerrorプロパティを使用して表示する
     console.error(error);
+    // pokemonInfoのHTML要素のtextContentにデータが取得できなかったことを示す文字列を追加。
     pokemonInfo.textContent = "ポケモンデータを取れませんでした。";
   }
   // ★ここまでPokeAPI追加
