@@ -17,7 +17,7 @@ async function omikujiFunc() {
   // 色の初期値をセット
   // #d4af37というカラーをresultAreaというHTML要素が持つstyleオブジェクトのカラープロパティに代入する
   resultArea.style.color = "#d4af37";
-  // 今は???の結果表示部分に"占い中......"という文字列を代入
+  // 今は`???`の結果表示部分に"占い中......"という文字列を代入
   resultArea.textContent = "占い中...";
   // omikujiBtnが通信中はdisabled（無効）をtrueにしておく。
   omikujiBtn.disabled = true;
@@ -25,14 +25,15 @@ async function omikujiFunc() {
   // ★追加：コメントを外す＆クラスを追加（震えスタート！）
   // コンテナクラスのHTML要素を取得。containerに代入。
   const container = document.querySelector(".container");
-  // ★追加：CSSのアニメーションを適応させるために，クラス属性に追加する。
+  // ★追加：CSSのアニメーションを適用させるために，クラス属性に追加する。
   // containerのクラス属性の中に，shake-animationというクラスを追加。
   container.classList.add("shake-animation");
 
   // 時間測定用のコード
   console.time("時間測定");
+  // TODO ここ修正
   // 3秒後にresolveする
-  // この処理は3秒待たせるだけの処理。後続の処理を3秒間停止させておく。
+  // この処理を3秒待たせる処理。後続の処理が3秒間停止できる。
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.timeEnd("時間測定");
   // ★追加：待った終わったので、震えるクラスを外す（スイッチOFF！）
@@ -66,7 +67,7 @@ async function omikujiFunc() {
   try {
     // https://pokeapi.co/api/v2/pokemon/ditto のリンクからデータを非同期的に取得し，その結果をresに代入。
     const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
-    // もしリンクの通信がOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
+    // もしリンクからのレスポンスのステータスがOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
     if (!res.ok) {
       throw new Error("APIエラー");
     }
