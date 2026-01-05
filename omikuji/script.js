@@ -63,25 +63,75 @@ async function omikujiFunc() {
   // TODO: いらないかも！
   // ★ここからPokeAPI追加：Dittoのデータ取得
   // pokemonInfoのHTML要素のtextContentに"ポケモンデータ取得中..."を代入。
+  // pokemonInfo.textContent = "ポケモンデータ取得中...";
+  // // ここからの処理はエラーが発生したら即座にcatchでキャッチされる
+  // try {
+  //   // https://pokeapi.co/api/v2/pokemon/ditto のリンクからデータを非同期的に取得し，その結果をresに代入。
+  //   const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+  //   // もしリンクからのレスポンスのステータスがOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
+  //   if (!res.ok) {
+  //     throw new Error("APIエラー");
+  //   }
+  //   // 取得したJSON文字列の結果をjson()を利用してJSのオブジェクトに変更。dataという変数に代入。
+  //   const data = await res.json();
+  //   // 変数dataから，そのプロパティを指定して各変数に代入
+  //   const name = data.name;
+  //   const height = data.height;
+  //   const weight = data.weight;
+  //   // dataオブジェクトのabilitiesプロパティの中の配列のabilityプロパティのオブジェクトのnameプロパティ
+  //   // `?.`は、そのプロパティが`undefined/null`なら、undefinedを返すという安全処理
+  //   // `?? "なし"`は、undefinedが返ってきたら"なし"を返す
+  //   const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
+  //   // さきほど宣言した変数を使用して，それぞれの内容に日本語を追加したものをpokemonInfoというHTML要素のtextContentに代入。
+  //   pokemonInfo.textContent = `名前: ${name} / 高さ: ${height} / 重さ: ${weight} / 特性: ${firstAbility}`;
+  // } catch (error) {
+  //   // tryでエラーが起きたらすべてここに入る
+  //   // エラーをコンソールにコンソールのerrorプロパティを使用して表示する
+  //   console.error(error);
+  //   // pokemonInfoのHTML要素のtextContentにデータが取得できなかったことを示す文字列を追加。
+  //   pokemonInfo.textContent = "ポケモンデータを取れませんでした。";
+  // }
+  // // ★ここまでPokeAPI追加
+
+  // // omikujiBtnの無効をfalseにする
+  // omikujiBtn.disabled = false;
+
   pokemonInfo.textContent = "ポケモンデータ取得中...";
   // ここからの処理はエラーが発生したら即座にcatchでキャッチされる
   try {
     // https://pokeapi.co/api/v2/pokemon/ditto のリンクからデータを非同期的に取得し，その結果をresに代入。
-    const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+    // https://pokeapi.co/api/v2/pokemon?limit=0のリンクにアクセス
+    // ポケモンのデータは0件だけどアクセスの返答がくる！（ちなみにまだJSON文字列）
+    const countRes = await fetch("https://pokeapi.co/api/v2/pokemon?limit=0");
+    // TODO: 分割代入でやってみる
+    // 分割代入バージョン→const { count } = await countRes.json();
+    // countResをJSのオブジェクトに直して、countDataに代入する。
+
+    const countData = await countRes.json();
+    console.log(countData);
+    // countDataの結果のcountプロパティから、ポケモンの合計個体数を取得する。
+    const count = countData.count;
+    console.log(count);
+
+    // 0からpokemonの合計個体数より1マイナスまでの乱数を作成して整数に直して、1を足して1～合計個体数までの数字にする。
+    const randomId = Math.floor(Math.random() * count) + 1; // 1〜countの乱数
+    // randomIdをエンドポイントとして、そのポケモンのIDにランダムでアクセスして、JSON文字列の返答をresに代入する
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
     // もしリンクからのレスポンスのステータスがOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
     if (!res.ok) {
       throw new Error("APIエラー");
     }
-    // 取得したJSON文字列の結果をjson()を利用してJSのオブジェクトに変更。dataという変数に代入。
-    const data = await res.json();
+    const pokemon = await res.json();
+    console.log(pokemon.name);
+
     // 変数dataから，そのプロパティを指定して各変数に代入
-    const name = data.name;
-    const height = data.height;
-    const weight = data.weight;
+    const name = pokemon.name;
+    const height = pokemon.height;
+    const weight = pokemon.weight;
     // dataオブジェクトのabilitiesプロパティの中の配列のabilityプロパティのオブジェクトのnameプロパティ
     // `?.`は、そのプロパティが`undefined/null`なら、undefinedを返すという安全処理
     // `?? "なし"`は、undefinedが返ってきたら"なし"を返す
-    const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
+    const firstAbility = pokemon.abilities?.[0]?.ability?.name ?? "なし";
     // さきほど宣言した変数を使用して，それぞれの内容に日本語を追加したものをpokemonInfoというHTML要素のtextContentに代入。
     pokemonInfo.textContent = `名前: ${name} / 高さ: ${height} / 重さ: ${weight} / 特性: ${firstAbility}`;
   } catch (error) {
@@ -95,4 +145,14 @@ async function omikujiFunc() {
 
   // omikujiBtnの無効をfalseにする
   omikujiBtn.disabled = false;
+}
+
+async function main() {
+  // 全ポケモン数を取ってからランダムIDで1匹取得
+  const countRes = await fetch("https://pokeapi.co/api/v2/pokemon?limit=0");
+  const { count } = await countRes.json(); // 何匹いるか
+  const randomId = Math.floor(Math.random() * count) + 1; // 1〜countの乱数
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+  const pokemon = await res.json();
+  console.log(pokemon.name);
 }
