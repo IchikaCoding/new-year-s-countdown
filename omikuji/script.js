@@ -60,6 +60,7 @@ async function omikujiFunc() {
     resultArea.style.color = "#d4af37";
   }
 
+  // TODO: いらないかも！
   // ★ここからPokeAPI追加：Dittoのデータ取得
   // pokemonInfoのHTML要素のtextContentに"ポケモンデータ取得中..."を代入。
   pokemonInfo.textContent = "ポケモンデータ取得中...";
