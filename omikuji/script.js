@@ -15,9 +15,9 @@ omikujiBtn.addEventListener("click", omikujiFunc);
  */
 async function omikujiFunc() {
   // 色の初期値をセット
-  // #d4af37というカラーをresultAreaというHTML要素のスタイルプロパティのcolorに代入。
+  // #d4af37というカラーをresultAreaというHTML要素が持つstyleオブジェクトのカラープロパティに代入する
   resultArea.style.color = "#d4af37";
-  // 今は???の結果表示部分に"神様と通信中..."という文字列を代入
+  // 今は???の結果表示部分に"占い中......"という文字列を代入
   resultArea.textContent = "占い中...";
   // omikujiBtnが通信中はdisabled（無効）をtrueにしておく。
   omikujiBtn.disabled = true;
@@ -29,9 +29,10 @@ async function omikujiFunc() {
   // containerのクラス属性の中に，shake-animationというクラスを追加。
   container.classList.add("shake-animation");
 
+  // 時間測定用のコード
+  console.time("時間測定");
   // 3秒後にresolveする
   // この処理は3秒待たせるだけの処理。後続の処理を3秒間停止させておく。
-  console.time("時間測定");
   await new Promise((resolve) => setTimeout(resolve, 3000));
   console.timeEnd("時間測定");
   // ★追加：待った終わったので、震えるクラスを外す（スイッチOFF！）
@@ -47,8 +48,9 @@ async function omikujiFunc() {
   // resultが???の結果表示部分に代入される
   resultArea.textContent = result;
 
-  // もし結果が大吉なら，HTMLElement のサブクラスにある color に#d93d3dの色を代入する
-  // 大吉以外だったら，HTMLElement のサブクラスにある color に#d4af37の色を代入する
+  // もし結果が大吉なら，HTML要素が持つstyleオブジェクトのカラープロパティに#d93d3dの色を代入する
+  // 凶だったら，HTML要素が持つstyleオブジェクトのカラープロパティに#333の色を代入する
+  // それ以外だったら，HTML要素が持つstyleオブジェクトのカラープロパティに#d4af37の色を代入する
   if (result === "大吉") {
     resultArea.style.color = "#d93d3d";
   } else if (result === "凶") {
@@ -74,7 +76,9 @@ async function omikujiFunc() {
     const name = data.name;
     const height = data.height;
     const weight = data.weight;
-    // これは何だ？？？
+    // dataオブジェクトのabilitiesプロパティの中の配列のabilityプロパティのオブジェクトのnameプロパティ
+    // `?.`は、そのプロパティが`undefined/null`なら、undefinedを返すという安全処理
+    // `?? "なし"`は、undefinedが返ってきたら"なし"を返す
     const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
     // さきほど宣言した変数を使用して，それぞれの内容に日本語を追加したものをpokemonInfoというHTML要素のtextContentに代入。
     pokemonInfo.textContent = `名前: ${name} / 高さ: ${height} / 重さ: ${weight} / 特性: ${firstAbility}`;
