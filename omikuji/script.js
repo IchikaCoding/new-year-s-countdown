@@ -60,27 +60,43 @@ async function omikujiFunc() {
     resultArea.style.color = "#d4af37";
   }
 
+  // colorInfoElementのHTML要素が持つtextContentプロパティに"ラッキーカラー取得中…"に代入している。
   colorInfoElement.textContent = "ラッキーカラー取得中…";
-  // ここからの処理はエラーが発生したら即座にcatchでキャッチされる
   try {
-    // https://pokeapi.co/api/v2/pokemon/ditto のリンクからデータを非同期的に取得し，その結果をresに代入。
-    // https://pokeapi.co/api/v2/pokemon?limit=0のリンクにアクセス
-    // ポケモンのデータは0件だけどアクセスの返答がくる！（ちなみにまだJSON文字列）
-    const res = await fetch("https://www.thecolorapi.com/id?hex=24B1E0");
-    // もしリンクからのレスポンスのステータスがOKじゃなかったら，APIエラーというエラーを手動で作成してエラーをcatchに投げる。
+    // hex に「000000」から「ffffff」までの6桁の16進文字列を代入する
+    // 0から0xffffff（16進で白）までの乱数を生成して整数に直す
+    // その結果を16進数の文字列に直す
+    // さらにその結果を6桁に揃えて、足りなかったら0からスタートする文字列に直す
+    const hex = Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0");
+    // TODO:ちょっと理解度怪しい
+    // リンクにアクセスしてゲットした結果のHTTPレスポンスオブジェクトをresに入れる
+    // hexはシャープをつけないでアクセスする
+    const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`);
+    // okプロパティがfalseだったら自作のエラーメッセージを投げる
     if (!res.ok) {
       throw new Error("APIエラー");
     }
+    // HTTPレスポンスオブジェクトであるresのJSON文字列を読み取ってJSのオブジェクトに直して代入
     const colorData = await res.json();
-    console.log(colorData.name.value);
+    // colorDataオブジェクトのnameプロパティがあったら、そのオブジェクトのvalueプロパティの値を代入
+    // もし値がなかったら名前なしを代入する
+    const colorName = colorData.name?.value ?? "名前なし";
+    // colorDataオブジェクトのhexプロパティがあったら、そのvalueプロパティの値を代入する
+    // なかったら、生成したhexの値にシャープをつけて代入する
+    const hexValue = colorData.hex?.value ?? `#${hex}`;
+    // 指定の文字列をcolorInfoElementというHTML要素のtextContentプロパティに代入
+    colorInfoElement.textContent = `今日のラッキーカラー: ${colorName} (${hexValue})`;
+    // hexValueをcolorInfoElementのstyleオブジェクトのcolorプロパティに代入
+    // 表示するテキストのカラーを生成したカラーコードの色にしている
+    colorInfoElement.style.color = hexValue;
   } catch (error) {
-    // tryでエラーが起きたらすべてここに入る
-    // エラーをコンソールにコンソールのerrorプロパティを使用して表示する
+    // TODO: もしエラー投げるところ以外でエラーが出たらどうなるか確認する
+    // consoleのerrorメソッドを使用してerrorを表示
     console.error(error);
-    // pokemonInfoのHTML要素のtextContentにデータが取得できなかったことを示す文字列を追加。
     colorInfoElement.textContent = "カラーデータを取れませんでした。";
   }
-  // ★ここまでPokeAPI追加
 
   // omikujiBtnの無効をfalseにする
   omikujiBtn.disabled = false;
