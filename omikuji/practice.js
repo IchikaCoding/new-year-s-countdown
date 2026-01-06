@@ -3,8 +3,8 @@
 const omikujiBtnElement = document.getElementById("omikuji-btn");
 // 結果表示要素
 const resultElement = document.getElementById("result");
-// pokeAPIから取得したデータを表示する部分
-const pokemonInfoElement = document.getElementById("pokemon-info");
+// The color APIから取得したデータを表示する部分
+const colorInfoElement = document.getElementById("color-info");
 
 // イベントを追加
 // omikujiBtnElementを押したら，おみくじのロジックが動くイベント
@@ -28,7 +28,6 @@ async function omikujiFunc() {
   const containerElement = document.querySelector(".container");
   containerElement.classList.add("shake-animation");
 
-  //   TODO これを変数に代入したい
   const doneMessage = await new Promise((resolve) => {
     setTimeout(() => {
       resolve("3秒の待ち時間終了");
@@ -50,23 +49,29 @@ async function omikujiFunc() {
   }
   // pokeAPIからデータ取得して、エラーになったら投げる
   // resをJSのオブジェクトに戻すとどうしてポケモンのデータになるの？
-  // TODO: エラーを投げてみる
+
   try {
-    const res = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+    // colorInfoElement.textContent = "ラッキーカラーなんだろう？";
+    // TODO: 0xffffffってなんだ？16進数の白は#ffffffだからこれはなんだろう？
+    // hexの16進数の0から白までのランダムな数字を生成
+    const hex = Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0");
+    const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`);
     if (!res.ok) {
       throw new Error("APIエラー");
     }
     const data = await res.json();
     console.log(data);
-    const name = data.name;
-    const height = data.height;
-    const weight = data.weight;
-    // TODO: なしを体験したい
-    const firstAbility = data.abilities?.[0]?.ability?.name ?? "なし";
-    pokemonInfoElement.textContent = `お名前：${name}, 高さ：${height}, 重さ：${weight}, 特技：${firstAbility}`;
+    // dataから使いたいデータ(名前、カラーコード)を変数に代入
+    const colorName = data.name?.value ?? "カラーネームなし";
+    const colorCode = data.hex?.value ?? `#${hex}`;
+    // その変数をcolorInfoElementに代入する
+    colorInfoElement.textContent = `あなたのラッキーカラー：${colorName}(${colorCode})`;
+    colorInfoElement.style.color = colorCode;
   } catch (error) {
     console.error(error);
-    console.error("ポケモンゲットならず😱");
+    console.error("ラッキーカラー取得できず・・・");
   }
   omikujiBtnElement.disabled = false;
 }
