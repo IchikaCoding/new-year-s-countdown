@@ -5,6 +5,7 @@ const omikujiBtnElement = document.getElementById("omikuji-btn");
 const resultElement = document.getElementById("result");
 // The color APIから取得したデータを表示する部分
 const colorInfoElement = document.getElementById("color-info");
+const loadingElement = document.getElementById("loading");
 
 // イベントを追加
 // omikujiBtnElementを押したら，おみくじのロジックが動くイベント
@@ -23,17 +24,20 @@ async function omikujiFunc() {
   omikujiBtnElement.disabled = true;
   resultElement.textContent = waitString;
   console.log(waitString);
+  // loadingElement要素のhiddenプロパティにfalseを代入→ぐるぐる表示が見えるようにする
+  loadingElement.hidden = false;
 
   // ボタンのアニメーションを追加
   const containerElement = document.querySelector(".container");
   containerElement.classList.add("shake-animation");
 
-  const doneMessage = await new Promise((resolve) => {
+  // TODO: ここの処理が途中
+  const waitPromise = new Promise((resolve) => {
     setTimeout(() => {
       resolve("3秒の待ち時間終了");
     }, 3000);
   });
-  console.log(doneMessage);
+  console.log(waitPromise);
   // 3秒間待ち時間が終わったらアニメーションは削除する
   containerElement.classList.remove("shake-animation");
   const messageArray = ["大吉", "中吉", "笑吉", "いちかどん吉"];
@@ -72,6 +76,8 @@ async function omikujiFunc() {
   } catch (error) {
     console.error(error);
     console.error("ラッキーカラー取得できず・・・");
+  } finally {
+    loadingElement.hidden = true;
+    omikujiBtnElement.disabled = false;
   }
-  omikujiBtnElement.disabled = false;
 }
