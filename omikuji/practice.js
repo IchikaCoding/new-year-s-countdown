@@ -51,9 +51,9 @@ async function omikujiFunc() {
   // resをJSのオブジェクトに戻すとどうしてポケモンのデータになるの？
 
   try {
-    // colorInfoElement.textContent = "ラッキーカラーなんだろう？";
-    // TODO: 0xffffffってなんだ？16進数の白は#ffffffだからこれはなんだろう？
-    // hexの16進数の0から白までのランダムな数字を生成
+    // hexの16進数の0からffffff（白）までのランダムな数字を生成
+    // 0x は「これから書く数は16進数だよ」という接頭辞
+    // 0b は 2 進数、0o は 8 進数の接頭辞
     const hex = Math.floor(Math.random() * 0xffffff)
       .toString(16)
       .padStart(6, "0");

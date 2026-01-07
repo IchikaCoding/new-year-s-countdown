@@ -16,10 +16,12 @@
       <!-- ★ここからcolorAPI追加 -->
       <div id="color-info" class="message-box"></div>
       <!-- ★ここまでcolorAPI追加 -->
+      <!-- `aria-live="polite"`でページが更新されたことをユーザーに知らせることができる -->
+      <div id="loading" aria-live="polite" hidden>ぐるぐる中…</div>
 
       <button id="omikuji-btn">おみくじを引く</button>
     </div>
-    <!-- <script src="script.js"></script> -->
-    <script src="practice.js"></script>
+    <script src="script.js"></script>
+    <!-- <script src="practice.js"></script> -->
   </body>
 </html>

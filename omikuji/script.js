@@ -62,6 +62,13 @@ async function omikujiFunc() {
 
   // colorInfoElementのHTML要素が持つtextContentプロパティに"ラッキーカラー取得中…"に代入している。
   colorInfoElement.textContent = "ラッキーカラー取得中…";
+  // HTML要素を参照できるようにloadingの変数に代入
+  const loading = document.getElementById("loading");
+
+  // TODO: hiddenに代入ってできるの？→要素が持っている真偽値プロパティだから代入可能
+  // tryの前に書くのはなぜ？tryの処理開始直前にぐるぐるを出したいから
+  // ここで表示
+  loading.hidden = false;
   try {
     // hex に「000000」から「ffffff」までの6桁の16進文字列を代入する
     // 0から0xffffff（16進で白）までの乱数を生成して整数に直す
@@ -70,7 +77,7 @@ async function omikujiFunc() {
     const hex = Math.floor(Math.random() * 0xffffff)
       .toString(16)
       .padStart(6, "0");
-    // TODO:ちょっと理解度怪しい
+
     // リンクにアクセスしてゲットした結果のHTTPレスポンスオブジェクトをresに入れる
     // hexはシャープをつけないでアクセスする
     const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`);
@@ -92,14 +99,15 @@ async function omikujiFunc() {
     // 表示するテキストのカラーを生成したカラーコードの色にしている
     colorInfoElement.style.color = hexValue;
   } catch (error) {
-    // TODO: もしエラー投げるところ以外でエラーが出たらどうなるか確認する
     // consoleのerrorメソッドを使用してerrorを表示
     console.error(error);
     colorInfoElement.textContent = "カラーデータを取れませんでした。";
+  } finally {
+    // HTML要素のhidden属性にtrueを代入
+    loading.hidden = true; // 終了時に必ず消す
+    // omikujiBtnの無効をfalseにする
+    omikujiBtn.disabled = false;
   }
-
-  // omikujiBtnの無効をfalseにする
-  omikujiBtn.disabled = false;
 }
 
 async function main() {
