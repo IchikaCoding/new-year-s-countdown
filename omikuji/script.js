@@ -38,15 +38,12 @@ async function omikujiFunc() {
   // 時間測定用のコード
   console.time("時間測定");
 
-  // Promiseは作った瞬間に返ってきて、タイマーもその瞬間に走り出し、3秒後にresolve。
-  // await waitPromise はその完了を待つだけ。
-  // JS全体は止まらず、他の処理や描画は進む
-
-  // Promiseチケットが即座に返ってくる。タイマーはその時にスタートする。3秒後にresolveされる。▶awaitして3秒待機が終わるのを待って完了。
-  // 3秒後にresolveする→そこから続きの処理がマイクロタスクキューに入る→その間はブラウザは動き回れるよ
-  // この処理の行が3秒待機するPromiseオブジェクト。JS全体が止まっているわけじゃない
+  // TODO: ここは非同期処理！要注意！
+  // Promiseオブジェクトは即座に作成される▶resolve前なので値は未確定。
+  // setTimeoutが3秒後にresolve関数（コールバック）を呼ぶ。▶3秒経ったらfulfilled状態になってundefinedが確定する。マイクロタスクキューに入る▶.thenで呼ばれたら中身が動く
+  // waitPromiseにはPromiseオブジェクトが返る
   const waitPromise = new Promise((resolve) => setTimeout(resolve, 3000));
-
+  console.log(waitPromise);
   // colorPromiseに非同期処理の関数を即時実行して結果を代入。
   const colorPromise = (async () => {
     // 16進数で0からffffffまでの乱数を生成して整数に直す
@@ -199,10 +196,16 @@ console.log("D");
 async function practice() {
   console.time("計測");
   console.log("やきいも");
+
+  // Promiseオブジェクトを作成して即座に返す
+  // setTimeoutが3秒後にresolve("差し入れのお菓子")を実行▶"差し入れのお菓子"が値として確定（fulfilled）
   // resolveを即座にやってしまうと3秒待機は実現できず、、、
-  // 3秒待機させたかったら、コールバックで包む・setTimeoutの第3引数を使う
+  // 3秒待機させたかったら、コールバックで包む。
+  // もしくは、setTimeoutの第3引数に値を入れて、resolve()で即時実行しないようにする
   const waitIchika = new Promise((resolve) =>
-    setTimeout(() => resolve("差し入れのお菓子"), 3000)
+    setTimeout(() => {
+      return resolve("差し入れのお菓子");
+    }, 3000)
   );
   const ichikaDon = await waitIchika;
   console.log(ichikaDon);
