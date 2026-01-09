@@ -109,7 +109,7 @@ download()
 
 //   -------------------------------
 
-// 焼き芋を3秒で焼いて提供する
+// ! 焼き芋を3秒で焼いて提供する
 
 function yakiimo() {
   return new Promise((resolve, reject) =>
