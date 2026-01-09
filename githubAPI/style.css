@@ -1,138 +1,143 @@
 /* --- デザインの設定（CSS変数） --- */
-      :root {
-        --bg-color: #0d1117; /* 全体の背景色 */
-        --card-bg: #161b22; /* カードの背景色 */
-        --text-main: #c9d1d9; /* メインの文字色 */
-        --text-sub: #8b949e; /* 薄い文字色 */
-        --border-color: #30363d; /* 枠線の色 */
-        --accent-color: #238636; /* ボタンの緑色 */
-        --accent-hover: #2ea043; /* ボタンを押した時の色 */
-      }
+:root {
+  --bg-color: #0d1117; /* 全体の背景色 */
+  --card-bg: #161b22; /* カードの背景色 */
+  --text-main: #c9d1d9; /* メインの文字色 */
+  --text-sub: #8b949e; /* 薄い文字色 */
+  --border-color: #30363d; /* 枠線の色 */
+  --accent-color: #238636; /* ボタンの緑色 */
+  --accent-hover: #2ea043; /* ボタンを押した時の色 */
+}
 
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        padding: 40px 20px;
-        text-align: center;
-        transition: background-color 0.3s;
-      }
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  padding: 40px 20px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
 
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 30px;
-        color: var(--text-main);
-      }
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  color: var(--text-main);
+}
 
-      /* 入力エリアのデザイン */
-      .search-box {
-        margin-bottom: 20px;
-      }
+/* 入力エリアのデザイン */
+.search-box {
+  margin-bottom: 20px;
+}
 
-      input {
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        color: var(--text-main);
-        padding: 12px 20px;
-        border-radius: 6px;
-        font-size: 16px;
-        outline: none;
-        width: 200px;
-        transition: border-color 0.2s;
-      }
+input {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s;
+}
 
-      input:focus {
-        border-color: #58a6ff; /* 入力中は青枠に */
-      }
+input:focus {
+  border-color: #58a6ff; /* 入力中は青枠に */
+}
 
-      button {
-        background-color: var(--accent-color);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.2s;
-      }
+button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
 
-      button:hover {
-        background-color: var(--accent-hover);
-      }
+button:hover {
+  background-color: var(--accent-hover);
+}
 
-      /* カード本体のデザイン */
-      #profile-card {
-        background-color: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 30px;
-        max-width: 350px;
-        margin: 40px auto;
-        display: none; /* 最初は隠す */
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+/* カード本体のデザイン */
+#profile-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 350px;
+  margin: 40px auto;
+  /*  最初は隠す */
+  display: none;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 
-        /* アニメーション設定 */
-        animation: fadeIn 0.5s ease-out;
-      }
+  /* アニメーション設定 */
+  animation: fadeIn 0.5s ease-out;
+}
 
-      /* フワッと表示するアニメーション */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+/* フワッと表示するアニメーション */
+@keyframes fadeIn {
+  from {
+    /* 開始時は透明にする */
+    opacity: 0;
+    /* ちょっと下にずらす */
+    transform: translateY(10px);
+  }
+  to {
+    /* 不透明にする */
+    opacity: 1;
+    /* 元の位置に戻る */
+    transform: translateY(0);
+  }
+}
 
-      .avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 4px solid var(--bg-color); /* 画像の周りに隙間を作る */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      }
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--bg-color); /* 画像の周りに隙間を作る */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 
-      h2 {
-        margin: 15px 0 5px 0;
-        font-size: 1.4rem;
-      }
+h2 {
+  margin: 15px 0 5px 0;
+  font-size: 1.4rem;
+}
 
-      .username-link {
-        color: var(--text-sub);
-        font-size: 1rem;
-        text-decoration: none;
-      }
+.username-link {
+  color: var(--text-sub);
+  font-size: 1rem;
+  text-decoration: none;
+}
 
-      .stats {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 25px;
-        padding-top: 20px;
-        border-top: 1px solid var(--border-color);
-      }
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
 
-      .stats div {
-        text-align: center;
-      }
+.stats div {
+  text-align: center;
+}
 
-      .stats strong {
-        font-size: 1.2rem;
-        display: block;
-        margin-bottom: 5px;
-        color: var(--text-main);
-      }
+.stats strong {
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-main);
+}
 
-      .stats span {
-        font-size: 0.9rem;
-        color: var(--text-sub);
-      }
+.stats span {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
 
-      .error {
-        color: #ff7b72;
-        margin-top: 10px;
-        font-weight: bold;
-      }
+.error {
+  color: #ff7b72;
+  margin-top: 10px;
+  font-weight: bold;
+}
