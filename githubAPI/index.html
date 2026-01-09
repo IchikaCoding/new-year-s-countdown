@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>GitHubプロフィールカード（ダークモード）</title>
+  </head>
+  <body>
+    <h1>GitHubプロフィール表示</h1>
+
+    <div class="search-box">
+      <input type="text" id="username-input" placeholder="GitHubユーザー名" />
+      <button id="search-btn">Search</button>
+    </div>
+
+    <p id="message" class="error"></p>
+
+    <div id="profile-card">
+      <img id="user-avatar" class="avatar" src="" alt="Avatar" />
+      <h2 id="user-name"></h2>
+      <p>@<span id="user-login" class="username-link"></span></p>
+
+      <div class="stats">
+        <div>
+          <strong id="repo-count"></strong>
+          <span>Repos</span>
+        </div>
+        <div>
+          <strong id="follower-count"></strong>
+          <span>Followers</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
