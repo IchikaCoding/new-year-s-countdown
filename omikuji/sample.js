@@ -71,22 +71,53 @@ function waitThreeSeconds() {
 
 /**
  * ラッキーカラー取得
+ * TODO fetch が長く止まるときに中断（タイムアウト）する仕組み（AbortController）を追加する
+ * TODO おみくじボタンを再度押す＝リトライをいれる
  */
-async function fetchLuckyColor() {
+/**
+ * 引数に時間が渡されなかったら5000msを採用する
+ * ラッキーカラー取得（タイムアウト付き）
+ * @param {number} timeoutMs タイムアウト時間（ミリ秒）
+ * @returns {Promise<{name: string, code: string}>}
+ */
+async function fetchLuckyColor(timeoutMs = 5000) {
   const hex = Math.floor(Math.random() * 0xffffff)
     .toString(16)
     .padStart(6, "0");
+  // 新しいAbortControllerオブジェクトインスタンスを生成する
+  const controller = new AbortController();
+  // タイムアウト時間になったらcontroller.abort()を実行してそのタイマーのIDを取得
+  const timerId = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
 
-  const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`);
-  if (!res.ok) {
-    throw new Error("APIエラー");
+  try {
+    // APIでリクエストして、オプションでコントローラーとつなげてHTTPレスポンスオブジェクトをもらう
+    const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`, {
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      throw new Error("APIエラー");
+    }
+
+    const data = await res.json();
+    return {
+      name: data.name?.value ?? "カラーネームなし",
+      code: data.hex?.value ?? `#${hex}`,
+    };
+  } catch (error) {
+    // タイムアウトかどうか判定したいときは名前を見る
+    if (error.name === "AbortError") {
+      colorInfoElement.textContent = "タイムアウト";
+    }
+    // どうしてここでエラーを投げるの？
+    // →ここでエラーを投げないと、handleOmikuji関数のcatchにエラーを渡す事ができないから！
+    throw error;
+  } finally {
+    // タイムアウトのタイマーをクリアにする
+    clearTimeout(timerId);
   }
-  const data = await res.json();
-  console.log(data);
-  return {
-    name: data.name?.value ?? "カラーネームなし",
-    code: data.hex?.value ?? `#${hex}`,
-  };
 }
 
 /**

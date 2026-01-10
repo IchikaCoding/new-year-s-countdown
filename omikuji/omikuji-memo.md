@@ -101,61 +101,49 @@ async function practice() {
 - [ ] 教材を素早く復習すること
 - [ ] 自分ができていない部分を言語化できるようにする
 
----
+```js
+/**
+ * TODO: 引数に代入はデフォルト？指定がなかったらその値を採用ってこと？
+ * ラッキーカラー取得（タイムアウト付き）
+ * @param {number} timeoutMs タイムアウト時間（ミリ秒）
+ * @returns {Promise<{name: string, code: string}>}
+ */
+async function fetchLuckyColor(timeoutMs = 5000) {
+  const hex = Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0");
+  // 新しいAbortControllerオブジェクトインスタンスを生成する
+  const controller = new AbortController();
+  // タイムアウト時間になったらcontroller.abort()を実行してそのタイマーのIDを取得
+  const timerId = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
 
-# 新春！神様通信おみくじ
+  try {
+    // APIでリクエストして、オプションでコントローラーとつなげてHTTPレスポンスオブジェクトをもらう
+    const res = await fetch(`https://www.thecolorapi.com/id?hex=${hex}`, {
+      signal: controller.signal,
+    });
 
-## 概要
+    if (!res.ok) {
+      throw new Error("APIエラー");
+    }
 
-お正月を祝う、JS 学習用のおみくじアプリ。
-ボタンを押すと「神様と通信」しているような演出（待ち時間）のあと、ランダムで運勢を表示する。
-
-## ファイル構成
-
-- `omikuji.html`: 画面の骨組み
-- `style.css`: デザイン（和風、紅白、金）
-- `README.md`: この設計書
-
-## 要件定義（やりたいこと）
-
-### 1. 要素の取得
-
-HTML 上の以下の要素を JavaScript で操作できるように取得する。
-
-- 結果表示エリア (`#result`)
-- おみくじボタン (`#omikuji-btn`)
-
-### 2. クリックイベントの実装
-
-ボタンがクリックされたら、以下のフロー処理を実行する。
-
-1.  **通信演出の開始**
-
-    - 結果エリアのテキストを「神様と通信中...」に変更する。
-    - 連打防止のため、ボタンを「無効化 (`disabled`)」する。
-
-2.  **待機処理（非同期処理）**
-
-    - `setTimeout` と `Promise` を使い、3 秒間待機する。
-    - `async/await` 構文を使用して処理を止めること。
-
-3.  **抽選ロジック**
-
-    - 3 秒経過後、`Math.random()` を使用して運勢をランダムに決定する。
-    - 運勢リスト例: 大吉, 吉, 中吉, 小吉, 末吉, 凶
-
-4.  **結果の表示**
-
-    - 決定した運勢を結果エリアに表示する。
-    - 文字色などを変更しても面白い（任意）。
-
-5.  **終了処理**
-    - 次の人が引けるように、ボタンの「無効化」を解除する。
-
-## 技術スタック
-
-- HTML5 / CSS3
-- JavaScript (ES6+)
-  - DOM 操作 (`document.getElementById`)
-  - イベントリスナー (`addEventListener`)
-  - 非同期処理 (`async/await`, `Promise`)
+    const data = await res.json();
+    return {
+      name: data.name?.value ?? "カラーネームなし",
+      code: data.hex?.value ?? `#${hex}`,
+    };
+  } catch (error) {
+    // タイムアウトかどうか判定したいときは名前を見る
+    if (error.name === "AbortError") {
+      colorInfo;
+    }
+    // TODO: どうしてここでエラーを投げるの？
+    throw error;
+  } finally {
+    // タイムアウトのタイマーをクリアにする
+    clearTimeout(timerId);
+  }
+}
+```
