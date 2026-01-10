@@ -63,7 +63,7 @@ function showColorError() {
 
 /**
  * 3秒待機（演出用）
- * @return {Promise}
+ * @returns {Promise}
  */
 function waitThreeSeconds() {
   return new Promise((resolve) => setTimeout(resolve, 3000));
@@ -82,7 +82,7 @@ async function fetchLuckyColor() {
     throw new Error("APIエラー");
   }
   const data = await res.json();
-
+  console.log(data);
   return {
     name: data.name?.value ?? "カラーネームなし",
     code: data.hex?.value ?? `#${hex}`,
@@ -104,7 +104,6 @@ function getRandomFortune() {
  */
 async function omikujiFunc() {
   setLoadingUI();
-  console.time("時間測定");
 
   try {
     const waitPromise = waitThreeSeconds();
