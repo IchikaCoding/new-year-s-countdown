@@ -147,3 +147,43 @@ async function fetchLuckyColor(timeoutMs = 5000) {
   }
 }
 ```
+
+```js
+// ここから下は元の練習コード（そのまま残す例）
+
+async function main() {
+  const response = await fetch("https://www.thecolorapi.com/id?hex=24B1E0");
+  const colorData = await response.json();
+  console.log(colorData);
+}
+
+console.log("A");
+
+async function temp() {
+  console.log("B");
+  await Promise.resolve();
+  console.log("C");
+}
+temp();
+console.log("D");
+
+async function practice() {
+  console.time("計測");
+  console.log("やきいも");
+
+  // Promiseオブジェクトを作成して即座に返す
+  // setTimeoutが3秒後にresolve("差し入れのお菓子")を実行▶"差し入れのお菓子"が値として確定（fulfilled）
+  // resolveを即座にやってしまうと3秒待機は実現できず、、、
+  // 3秒待機させたかったら、コールバックで包む。
+  // もしくは、setTimeoutの第3引数に値を入れて、resolve()で即時実行しないようにする
+  const waitIchika = new Promise((resolve) =>
+    setTimeout(() => {
+      return resolve("差し入れのお菓子");
+    }, 3000)
+  );
+  const ichikaDon = await waitIchika;
+  console.log(ichikaDon);
+  console.log("うなぎ");
+  console.timeEnd("計測");
+}
+```
