@@ -9,22 +9,25 @@ const colorInfoElement = document.getElementById("color-info");
 const loading = document.getElementById("loading");
 // コンテナクラスのHTML要素を取得。containerに代入。
 const container = document.querySelector(".container");
-
+const retryBtnElement = document.getElementById("retry-btn");
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
 omikujiBtn.addEventListener("click", omikujiFunc);
-
+retryBtnElement.addEventListener("click", omikujiFunc);
 /**
  * UI初期化（占い開始時）
  */
 function setLoadingUI() {
   resultArea.style.color = "#d4af37";
   resultArea.textContent = "占い中...";
+  // リトライ後のタイムアウトを消すため
+  colorInfoElement.textContent = "";
   //   おみくじボタン押せなくする
   omikujiBtn.disabled = true;
   //   ローディングを表示
   loading.hidden = false;
   container.classList.add("shake-animation");
+  hideRetryBtn();
 }
 
 /**
@@ -58,6 +61,8 @@ function showColorInfo(name, code) {
  * エラー表示
  */
 function showColorError() {
+  // エラーを表示するときに「占い中・・・」を消すために空文字を入れる
+  resultArea.textContent = "";
   colorInfoElement.textContent = "ラッキーカラー取得できず・・・";
 }
 
@@ -107,15 +112,13 @@ async function fetchLuckyColor(timeoutMs = 5000) {
       code: data.hex?.value ?? `#${hex}`,
     };
   } catch (error) {
-    // タイムアウトかどうか判定したいときは名前を見る
-    if (error.name === "AbortError") {
-      colorInfoElement.textContent = "タイムアウト";
-    }
     // どうしてここでエラーを投げるの？
     // →ここでエラーを投げないと、handleOmikuji関数のcatchにエラーを渡す事ができないから！
     throw error;
   } finally {
     // タイムアウトのタイマーをクリアにする
+    // fetchが終わったあとにアボートされてしまうのを防ぐため。安全のため。
+    // いらなくなった予約は消す。
     clearTimeout(timerId);
   }
 }
@@ -135,10 +138,9 @@ function getRandomFortune() {
  */
 async function omikujiFunc() {
   setLoadingUI();
-
   try {
     const waitPromise = waitThreeSeconds();
-    const colorPromise = fetchLuckyColor();
+    const colorPromise = fetchLuckyColor(1);
     // 3秒だけ待つ処理なので変数宣言なし
     await waitPromise;
     // ! 分割代入？
@@ -148,48 +150,38 @@ async function omikujiFunc() {
     const result = getRandomFortune();
     showFortuneResult(result);
     showColorInfo(name, code);
+    omikujiBtn.hidden = false;
   } catch (error) {
     console.error(error);
-    showColorError();
+
+    // 自分で中断した場合はここのエラーになる
+    if (error.name === "AbortError") {
+      showAbortError();
+    } else {
+      // APIエラー（サーバーからrejectが返って来た場合）のときや
+      // 通信エラーのときなどにこっちのエラーが表示される
+      showColorError();
+    }
+
+    showRetryBtn();
   } finally {
     resetUI();
   }
 }
 
-// ここから下は元の練習コード（そのまま残す例）
-
-async function main() {
-  const response = await fetch("https://www.thecolorapi.com/id?hex=24B1E0");
-  const colorData = await response.json();
-  console.log(colorData);
+function showAbortError() {
+  // エラーを表示するときに「占い中・・・」を消すために空文字を入れる
+  resultArea.textContent = "";
+  // タイムアウトかどうか判定したいときは名前を見る
+  colorInfoElement.textContent = "タイムアウト";
 }
 
-console.log("A");
-
-async function temp() {
-  console.log("B");
-  await Promise.resolve();
-  console.log("C");
+function showRetryBtn() {
+  retryBtnElement.hidden = false;
+  omikujiBtn.hidden = true;
 }
-temp();
-console.log("D");
 
-async function practice() {
-  console.time("計測");
-  console.log("やきいも");
-
-  // Promiseオブジェクトを作成して即座に返す
-  // setTimeoutが3秒後にresolve("差し入れのお菓子")を実行▶"差し入れのお菓子"が値として確定（fulfilled）
-  // resolveを即座にやってしまうと3秒待機は実現できず、、、
-  // 3秒待機させたかったら、コールバックで包む。
-  // もしくは、setTimeoutの第3引数に値を入れて、resolve()で即時実行しないようにする
-  const waitIchika = new Promise((resolve) =>
-    setTimeout(() => {
-      return resolve("差し入れのお菓子");
-    }, 3000)
-  );
-  const ichikaDon = await waitIchika;
-  console.log(ichikaDon);
-  console.log("うなぎ");
-  console.timeEnd("計測");
+function hideRetryBtn() {
+  retryBtnElement.hidden = true;
+  omikujiBtn.hidden = false;
 }
