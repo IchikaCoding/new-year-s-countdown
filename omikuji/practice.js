@@ -19,7 +19,6 @@ omikujiBtnElement.addEventListener("click", handleOmikuji);
 // 配列から，インデック番号がランダムで選ばれる
 // その選ばれた配列のなかの文字列がresultElementに表示される
 
-// TODO イベントハンドラーらしくhandleOmikujiという名前に変える
 async function handleOmikuji() {
   setLoadingUI();
 
