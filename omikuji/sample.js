@@ -5,8 +5,10 @@ const resultArea = document.getElementById("result");
 const omikujiBtn = document.getElementById("omikuji-btn");
 // ID属性がcolor-infoのHTML要素を取得してcolorInfoElementに代入。
 const colorInfoElement = document.getElementById("color-info");
-// HTML要素を参照できるようにloadingの変数に代入
-const loading = document.getElementById("loading");
+// // HTML要素を参照できるようにloadingの変数に代入
+// const loading = document.getElementById("loading");
+// Bootstrapのぐるぐる（スピナー）するHTML要素を取得
+const loadingBsElement = document.getElementById("loading-bs");
 // コンテナクラスのHTML要素を取得。containerに代入。
 const container = document.querySelector(".container");
 const retryBtnElement = document.getElementById("retry-btn");
@@ -14,6 +16,7 @@ const retryBtnElement = document.getElementById("retry-btn");
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
 omikujiBtn.addEventListener("click", omikujiFunc);
 retryBtnElement.addEventListener("click", omikujiFunc);
+loadingBsElement.hidden = true;
 /**
  * UI初期化（占い開始時）
  */
@@ -25,7 +28,7 @@ function setLoadingUI() {
   //   おみくじボタン押せなくする
   omikujiBtn.disabled = true;
   //   ローディングを表示
-  loading.hidden = false;
+  loadingBsElement.hidden = false;
   container.classList.add("shake-animation");
   hideRetryBtn();
 }
@@ -35,7 +38,7 @@ function setLoadingUI() {
  */
 function resetUI() {
   // 読み込み中を削除
-  loading.hidden = true;
+  loadingBsElement.hidden = true;
   //   おみくじボタン無効化を消す＝押せるようにする
   omikujiBtn.disabled = false;
   container.classList.remove("shake-animation");
@@ -140,7 +143,7 @@ async function omikujiFunc() {
   setLoadingUI();
   try {
     const waitPromise = waitThreeSeconds();
-    const colorPromise = fetchLuckyColor(1);
+    const colorPromise = fetchLuckyColor();
     // 3秒だけ待つ処理なので変数宣言なし
     await waitPromise;
     // ! 分割代入？
