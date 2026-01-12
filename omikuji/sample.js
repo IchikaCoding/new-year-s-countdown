@@ -14,6 +14,7 @@ const container = document.querySelector(".container");
 const retryBtnElement = document.getElementById("retry-btn");
 const rareAudioElement = document.getElementById("rareAudio");
 const normalAudioElement = document.getElementById("normalAudio");
+const clickAudioElement = document.getElementById("clickAudio");
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
 omikujiBtn.addEventListener("click", omikujiFunc);
@@ -149,6 +150,7 @@ function getRandomFortune() {
  * omikujiBtnのイベントハンドラomikujiFunc
  */
 async function omikujiFunc() {
+  clickAudioElement.play();
   setLoadingUI();
   try {
     const waitPromise = waitThreeSeconds();
