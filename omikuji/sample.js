@@ -12,6 +12,8 @@ const loadingBsElement = document.getElementById("loading-bs");
 // コンテナクラスのHTML要素を取得。containerに代入。
 const container = document.querySelector(".container");
 const retryBtnElement = document.getElementById("retry-btn");
+const rareAudioElement = document.getElementById("rareAudio");
+const normalAudioElement = document.getElementById("normalAudio");
 // イベントリスナー
 // omikujiBtnをクリックしたら，omikujiFuncの定義がイベントハンドラとして参照される
 omikujiBtn.addEventListener("click", omikujiFunc);
@@ -49,7 +51,13 @@ function resetUI() {
  */
 function showFortuneResult(result) {
   resultArea.textContent = result;
-  resultArea.style.color = result === "いちかどん吉" ? "#ff0000" : "#d4af37";
+  if (result === "いちかどん吉") {
+    resultArea.style.color = "#ff0000";
+    rareAudioElement.play();
+  } else {
+    resultArea.style.color = "#d4af37";
+    normalAudioElement.play();
+  }
 }
 
 /**
@@ -133,7 +141,8 @@ async function fetchLuckyColor(timeoutMs = 5000) {
  */
 function getRandomFortune() {
   const messageArray = ["大吉", "中吉", "笑吉", "いちかどん吉"];
-  return messageArray[Math.floor(Math.random() * messageArray.length)];
+  const randomIndex = Math.floor(Math.random() * messageArray.length);
+  return messageArray[randomIndex];
 }
 
 /**
