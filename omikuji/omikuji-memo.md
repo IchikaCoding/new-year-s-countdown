@@ -187,3 +187,22 @@ async function practice() {
   console.timeEnd("計測");
 }
 ```
+
+```css
+#sparkle-container {
+  position: fixed; /* 画面に固定。スクロールしても同じ場所 */
+  top: 0; /* 上端から0px */
+  left: 0; /* 左端から0px */
+  width: 100%; /* 横幅を画面いっぱいにする */
+  height: 100%; /* 高さを画面いっぱいにする */
+  pointer-events: none; /* クリックを邪魔しない（貫通する） */
+}
+
+.sparkle {
+  position: absolute; /* 親（container）の中で自由に動かすため */
+  width: 6px; /* 横幅6pxの小さい点 */
+  height: 6px; /* 高さ6pxの小さい点 */
+  background: gold; /* 色は金色 */
+  border-radius: 50%; /* 角を丸くして丸い点にする */
+}
+```

@@ -14,6 +14,22 @@ body {
   background-repeat: no-repeat; /* タイル状に繰り返さない */
   background-position: center; /* 中央に寄せる */
 }
+#sparkle-container {
+  position: fixed; /* 画面に固定。スクロールしても同じ場所 */
+  top: 0; /* 上端から0px */
+  left: 0; /* 左端から0px */
+  width: 100%; /* 横幅を画面いっぱいにする */
+  height: 100%; /* 高さを画面いっぱいにする */
+  pointer-events: none; /* クリックを邪魔しない（貫通する） */
+}
+
+.sparkle {
+  position: absolute; /* 親（container）の中で自由に動かすため */
+  width: 6px; /* 横幅6pxの小さい点 */
+  height: 6px; /* 高さ6pxの小さい点 */
+  background: gold; /* 色は金色 */
+  border-radius: 50%; /* 角を丸くして丸い点にする */
+}
 .container {
   background: white;
   padding: 2rem;
@@ -62,29 +78,59 @@ button:disabled {
    ★修正：お正月らしい、ゆったりした揺れ
 ------------------------------------------- */
 
-/* ゆらゆらと優しく揺れる */
-@keyframes soft-sway {
+/* ガサガサ動きを作るアニメーションの名前 */
+@keyframes gasa-gasa {
+  /* 0%はアニメのスタート位置 */
   0% {
-    transform: rotate(0deg);
+    /* 位置はそのまま、回転もしない */
+    transform: translate(0, 0) rotate(0deg);
   }
-  25% {
-    transform: rotate(5deg);
-  } /* 右に少し傾く */
+  /* 10%の時点：少し右上にズラして少し右回り */
+  10% {
+    transform: translate(2px, -1px) rotate(2deg);
+  }
+  /* 20%：左下にズラして少し左回り */
+  20% {
+    transform: translate(-2px, 1px) rotate(-2deg);
+  }
+  /* 30%：右下にズラして少し右回り */
+  30% {
+    transform: translate(1px, -2px) rotate(1deg);
+  }
+  /* 40%：左上にズラして少し左回り */
+  40% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  /* 50%：右にちょっとズラして右回り */
   50% {
-    transform: rotate(0deg);
-  } /* 真ん中に戻る */
-  75% {
-    transform: rotate(-5deg);
-  } /* 左に少し傾く */
+    transform: translate(2px, 0px) rotate(2deg);
+  }
+  /* 60%：左にちょっとズラして左回り */
+  60% {
+    transform: translate(-2px, 0px) rotate(-2deg);
+  }
+  /* 70%：右下に少しズラして右回り */
+  70% {
+    transform: translate(1px, 1px) rotate(1deg);
+  }
+  /* 80%：左上に少しズラして左回り */
+  80% {
+    transform: translate(-1px, -1px) rotate(-1deg);
+  }
+  /* 90%：右上に少しズラして右回り */
+  90% {
+    transform: translate(2px, -1px) rotate(2deg);
+  }
+  /* 100%は終わり。元の位置に戻す */
   100% {
-    transform: rotate(0deg);
+    transform: translate(0, 0) rotate(0deg);
   }
 }
 
+/* このクラスを付けるとガサガサが始まる */
 .shake-animation {
-  /* 名前を soft-sway に変更 */
-  /* 時間を 0.5s から 2.5s に変更して、ゆっくりにする */
-  animation: soft-sway 2.5s ease-in-out infinite;
+  /* 2秒で1回、カクカクした動きで再生 */
+  animation: gasa-gasa 2s steps(1) infinite;
 }
 
 #loading {
