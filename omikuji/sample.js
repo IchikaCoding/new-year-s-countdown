@@ -1,3 +1,4 @@
+import { animate } from "https://cdn.jsdelivr.net/npm/animejs/+esm";
 // HTML参照
 // IDがresultのHTML要素を取得
 const resultArea = document.getElementById("result");
@@ -218,8 +219,8 @@ for (let i = 0; i < sparkleCount; i++) {
   // 　2000~4000までのランダムな値を代入。
   const duration = 2000 + Math.random() * 2000;
 
-  anime({
-    targets: dot,
+  // TODO 引数が違う！
+  animate(dot, {
     translateX: x,
     // 画面の高さの50上の位置から50下まで落ちる
     translateY: [-50, window.innerHeight + 50],
@@ -229,6 +230,6 @@ for (let i = 0; i < sparkleCount; i++) {
     duration,
     delay,
     loop: true,
-    easing: "linear",
+    ease: "linear",
   });
 }
