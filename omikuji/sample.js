@@ -221,7 +221,9 @@ for (let i = 0; i < sparkleCount; i++) {
 
   // TODO 引数が違う！
   animate(dot, {
-    translateX: x,
+    // x方向の移動を最初からxのままにする。
+    // 横移動なしになる
+    translateX: [x, x],
     // 画面の高さの50上の位置から50下まで落ちる
     translateY: [-50, window.innerHeight + 50],
     // 少し小さめスタートでだんだん大きくなる。

@@ -27,7 +27,7 @@ body {
   position: absolute; /* 親（container）の中で自由に動かすため */
   width: 6px; /* 横幅6pxの小さい点 */
   height: 6px; /* 高さ6pxの小さい点 */
-  background: gold; /* 色は金色 */
+  background: rgb(135, 200, 253); /* 色は金色 */
   border-radius: 50%; /* 角を丸くして丸い点にする */
 }
 .container {
