@@ -235,3 +235,5 @@ for (let i = 0; i < sparkleCount; i++) {
     ease: "linear",
   });
 }
+
+/** ここから下が紙吹雪 */

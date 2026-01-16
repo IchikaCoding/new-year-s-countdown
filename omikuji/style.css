@@ -14,6 +14,85 @@ body {
   background-repeat: no-repeat; /* タイル状に繰り返さない */
   background-position: center; /* 中央に寄せる */
 }
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  perspective: 1000px;
+}
+
+.pkami {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 2px;
+  transform-style: preserve-3d;
+  will-change: transform;
+
+  /* JSは --h と --shine だけ渡す（重要：JSでfilter文字列を作らない） */
+  --shine: 0.3;
+
+  opacity: calc(0.25 + var(--shine) * 0.75);
+
+  /* ここのキラキラ/発光はCSS計算に寄せる */
+  filter: brightness(calc(0.8 + var(--shine) * 0.95))
+    drop-shadow(
+      0 0 calc(0.5px + var(--shine) * 9px)
+        rgb(255 255 255 / calc(0.06 + var(--shine) * 0.55))
+    );
+
+  background: linear-gradient(
+    135deg,
+    hsl(var(--h) 95% 62%),
+    hsl(var(--h) 95% 45%)
+  );
+}
+
+/* 反射の筋（shineに合わせて位置も動かす） */
+.pkami::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.45) 60%,
+    rgba(255, 255, 255, 0) 78%
+  );
+  background-size: 220% 220%;
+  background-position: calc(var(--shine) * 100%) 50%;
+  opacity: calc(0.05 + var(--shine) * 0.6);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* ラメ粒 */
+.pkami::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.45),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 70% 60%,
+      rgba(255, 255, 255, 0.35),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 45% 80%,
+      rgba(255, 255, 255, 0.3),
+      transparent 50%
+    );
+  opacity: calc(0.03 + var(--shine) * 0.22);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
 #sparkle-container {
   position: fixed; /* 画面に固定。スクロールしても同じ場所 */
   top: 0; /* 上端から0px */
