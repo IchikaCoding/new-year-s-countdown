@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>紙ふぶっきー</title>
+    <style>
+      body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+        background-color: #fcefe9;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        text-align: center;
+
+        background-image: url("./omikuji-bg.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        perspective: 1000px;
+      }
+
+      .pkami {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 2px;
+        transform-style: preserve-3d;
+        will-change: transform;
+
+        /* JSは --h と --shine だけ渡す（重要：JSでfilter文字列を作らない） */
+        --shine: 0.3;
+
+        opacity: calc(0.25 + var(--shine) * 0.75);
+
+        /* ここのキラキラ/発光はCSS計算に寄せる */
+        filter: brightness(calc(0.8 + var(--shine) * 0.95))
+          drop-shadow(
+            0 0 calc(0.5px + var(--shine) * 9px)
+              rgb(255 255 255 / calc(0.06 + var(--shine) * 0.55))
+          );
+
+        background: linear-gradient(
+          135deg,
+          hsl(var(--h) 95% 62%),
+          hsl(var(--h) 95% 45%)
+        );
+      }
+
+      /* 反射の筋（shineに合わせて位置も動かす） */
+      .pkami::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 2px;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0) 35%,
+          rgba(255, 255, 255, 0.45) 60%,
+          rgba(255, 255, 255, 0) 78%
+        );
+        background-size: 220% 220%;
+        background-position: calc(var(--shine) * 100%) 50%;
+        opacity: calc(0.05 + var(--shine) * 0.6);
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+
+      /* ラメ粒 */
+      .pkami::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 2px;
+        background: radial-gradient(
+            circle at 20% 30%,
+            rgba(255, 255, 255, 0.45),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 70% 60%,
+            rgba(255, 255, 255, 0.35),
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 45% 80%,
+            rgba(255, 255, 255, 0.3),
+            transparent 50%
+          );
+        opacity: calc(0.03 + var(--shine) * 0.22);
+        mix-blend-mode: screen;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layer" id="layer"></div>
+
+    <script>
+      function kamihubuki() {
+        const layer = document.getElementById("layer");
+
+        const pieces = [];
+        const COUNT = 80;
+
+        let W = innerWidth,
+          H = innerHeight;
+        //   resizeで幅変わったときにWとHの値を更新している
+        addEventListener("resize", () => {
+          W = innerWidth;
+          H = innerHeight;
+        });
+
+        for (let i = 0; i < COUNT; i++) {
+          const el = document.createElement("div");
+          el.className = "pkami";
+          // TODO:　rndは自作関数。
+          //
+          const w = rnd(6, 12);
+          const h = rnd(14, 26);
+          const hue = rnd(0, 360);
+
+          el.style.width = w + "px";
+          el.style.height = h + "px";
+          //   TODO: これなんだ？
+          //   CSS変数--hに色相（hue）を渡している
+          el.style.setProperty("--h", hue);
+
+          layer.appendChild(el);
+
+          const z = rnd(-80, 80);
+          //  0~1の奥行きに変えている
+          const depth01 = (z + 80) / 160; // 0..1
+          const scale = 0.75 + depth01 * 0.6; // 奥は小さく、手前は大きく
+
+          //   TODO: これなんだ？
+          //   pieces配列に状態をまとめて、管理している
+          pieces.push({
+            el,
+            x: rnd(0, W),
+            y: rnd(-H, 0),
+            vx: rnd(-30, 30),
+            vy: rnd(60, 140) * (0.85 + depth01 * 0.55), // 手前は少し速く
+            sway: rnd(0.8, 2.2),
+            rotX: rnd(0, 360),
+            rotY: rnd(0, 360),
+            rotZ: rnd(0, 360),
+            vrotX: rnd(180, 540),
+            vrotY: rnd(180, 540),
+            vrotZ: rnd(60, 240),
+            z,
+            scale,
+
+            // キラキラのための位相（滑らか成分）
+            phase: rnd(0, Math.PI * 2),
+
+            // たまに「キラッ」とするブースト
+            flash: 0,
+          });
+        }
+        const RAD = Math.PI / 180;
+        let last = performance.now();
+
+        function tick(now) {
+          // 何秒たったかを計算している。
+          const dt = (now - last) / 1000;
+          last = now;
+          // 風をサイン波（ゆらゆら）で作っている。
+          const wind = Math.sin(now * 0.0005) * 40;
+          // 配列に保存した状態を使用して計算
+          for (const p of pieces) {
+            // たて方向に落ちるスピード。
+            p.y += p.vy * dt;
+            // 横方向の移動。
+            //   風の影響＋ふわふわ揺れる動きを足している。
+            p.x += (p.vx + wind) * dt + Math.sin(now * 0.001 * p.sway) * 0.8;
+
+            p.rotX += p.vrotX * dt;
+            p.rotY += p.vrotY * dt;
+            p.rotZ += p.vrotZ * dt;
+            // 画面の下に落ちたら、上に戻して再利用する。
+            if (p.y > H + 40) {
+              p.y = rnd(-120, -40);
+              p.x = rnd(0, W);
+              p.flash = 0;
+            }
+            if (p.x < -60) p.x = W + 60;
+            if (p.x > W + 60) p.x = -60;
+
+            // ★「滑らかキラキラ」(sin) + 「たまにキラッ」(flash)
+            // TODO:　なぜきらきらきらするの？
+            p.flash = Math.max(0, p.flash - dt * 3.0);
+            // TODO: 0.008から0.1に変更してみたけどキラッとしてるか不明！
+            if (Math.random() < 0.1) p.flash = 1; // ここを上げると派手（0.008〜0.020くらいが無難）
+
+            const twinkle = (Math.sin(now * 0.004 + p.phase) + 1) * 0.5; // 0..1
+            const facing = Math.abs(Math.cos((p.rotX + p.rotY) * RAD)); // 0..1
+
+            // shineを1個の値に集約（CSS側が勝手に反射・ラメ・発光に変換）
+            const shine = clamp01(
+              0.12 + facing * 0.78 + twinkle * 0.2 + p.flash * 0.7
+            );
+            // toFixed()は小数点を指定した桁数の文字列で返すメソッド
+            p.el.style.setProperty("--shine", shine.toFixed(3));
+
+            // transformは必要（位置＋回転＋奥行きスケール）
+            p.el.style.transform =
+              `translate3d(${p.x}px, ${p.y}px, ${p.z}px)` +
+              ` rotateX(${p.rotX}deg) rotateY(${p.rotY}deg) rotateZ(${p.rotZ}deg)` +
+              ` scale(${p.scale})`;
+          }
+          requestAnimationFrame(tick);
+        }
+        // tickのアニメーションをずっと動かし続けるメソッド
+        requestAnimationFrame(tick);
+
+        /**
+         * ランダムな数を作る関数
+         * min~maxまでのランダムな数を生成
+         */
+        function rnd(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+        function clamp01(v) {
+          return Math.max(0, Math.min(1, v));
+        }
+      }
+
+      kamihubuki();
+    </script>
+  </body>
+</html>
